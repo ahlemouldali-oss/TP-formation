@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction de Churn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #333;
+            font-weight: bold;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-size: 18px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #004085);
+        }
+        .alert {
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4"><i class="fas fa-chart-line"></i> Prédiction de Churn Client</h1>
+        <div class="card p-4 mb-4">
+            <form method="POST" class="row g-3">
+                <div class="col-md-6">
+                    <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i> Âge</label>
+                    <input type="number" class="form-control" id="age" name="age" min="0" max="100" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="account_manager" class="form-label"><i class="fas fa-user-tie"></i> Account Manager</label>
+                    <select class="form-select" id="account_manager" name="account_manager" required>
+                        <option value="0">0 - Non</option>
+                        <option value="1">1 - Oui</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="years" class="form-label"><i class="fas fa-calendar-alt"></i> Années</label>
+                    <input type="number" step="0.1" class="form-control" id="years" name="years" min="0" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="num_sites" class="form-label"><i class="fas fa-globe"></i> Nombre de Sites</label>
+                    <input type="number" class="form-control" id="num_sites" name="num_sites" min="1" required>
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-magic"></i> Prédire</button>
+                </div>
+            </form>
+        </div>
+        {% if prediction %}
+        <div class="mt-4">
+            <h3 class="text-center"><i class="fas fa-chart-bar"></i> Résultat de la Prédiction :</h3>
+            <div class="alert alert-{{ 'danger' if prediction == '1' else 'success' }} text-center">
+                <h4>{{ 'Le client va probablement se désabonner.' if prediction == '1' else 'Le client va probablement rester.' }}</h4>
+            </div>
+            <p class="text-center"><strong>Probabilité de churn : {{ prob_1 }}%</strong></p>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> Probabilité de rester : {{ prob_0 }}%
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> Probabilité de churn : {{ prob_1 }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="info-section">
+            <h4><i class="fas fa-info-circle"></i> Informations saisies :</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Âge :</strong> {{ age }}</li>
+                <li class="list-group-item"><strong>Account Manager :</strong> {{ 'Oui' if account_manager == 1 else 'Non' }}</li>
+                <li class="list-group-item"><strong>Années :</strong> {{ years }}</li>
+                <li class="list-group-item"><strong>Nombre de Sites :</strong> {{ num_sites }}</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
